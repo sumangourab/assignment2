@@ -1,5 +1,5 @@
 import { Button, Flex, Box } from "@chakra-ui/react";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import FormSelect from "../../components/formComponents/FormSelect";
 import { useFormik } from "formik";
 import { PageNumbers } from "../../interface/home";
@@ -43,8 +43,14 @@ const InterviewDetailsForm: React.FC<{
     },
   });
 
-// @ts-ignore
-  const { state, setState } = useData();
+  const { setState } : any = useData();
+
+  useEffect(() => {
+    setState((prevState: any) => ({
+      ...prevState,
+      interviewSettings: values,
+    }));
+  }, [values, setState]);
 
   return (
     <Box width="100%" as="form" onSubmit={handleSubmit as any}>
@@ -54,16 +60,7 @@ const InterviewDetailsForm: React.FC<{
           placeholder="Select interview mode"
           name="interviewMode"
           options={interviewModeOptions}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue("interviewMode", "Online");
-            setState({
-              ...state,
-              interviewSettings: {
-                ...state.interviewSettings,
-                interviewMode: "Online",
-              },
-            });
-          }}
+          onChange={setFieldValue}
           onBlur={setFieldTouched}
           value={values.interviewMode}
           error={errors?.interviewMode}
@@ -74,16 +71,7 @@ const InterviewDetailsForm: React.FC<{
           placeholder="Select interview duration"
           name="interviewDuration"
           options={interviewDurationOptions}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue("interviewDuration", "short");
-            setState({
-              ...state,
-              interviewSettings: {
-                ...state.interviewSettings,
-                interviewDuration: "short",
-              },
-            });
-          }}
+          onChange={setFieldValue}
           onBlur={setFieldTouched}
           value={values.interviewDuration}
           error={errors?.interviewDuration}
@@ -94,16 +82,7 @@ const InterviewDetailsForm: React.FC<{
           name="interviewLanguage"
           placeholder="Select interview language"
           options={interviewLanguageOptions}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue("interviewLanguage", "English");
-            setState({
-              ...state,
-              interviewSettings: {
-                ...state.interviewSettings,
-                interviewLanguage: "English",
-              },
-            });
-          }}
+          onChange={setFieldValue}
           onBlur={setFieldTouched}
           error={errors.interviewLanguage}
           touched={touched.interviewLanguage}

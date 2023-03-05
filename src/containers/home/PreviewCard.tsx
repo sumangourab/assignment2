@@ -98,14 +98,17 @@ const PreviewCard: React.FC<{
             <KeyValue
               title="Urgency"
               value={
-                
-                  requisitionDetails?.urgency
+                urgencyOptions.find(
+                  (item) => item?.value === requisitionDetails?.urgency
+                )?.label
               }
             />
             <KeyValue
               title="Gender"
               value={
-                requisitionDetails?.gender
+                genderOptions.find(
+                  (item) => item?.value === requisitionDetails?.gender
+                )?.label
               }
             />
           </DataCard>
@@ -118,13 +121,17 @@ const PreviewCard: React.FC<{
             <KeyValue
               title="Interview Duration"
               value={
-                interviewSettings?.interviewDuration
+                interviewDurationOptions.find(
+                  (item) => item?.value === interviewSettings?.interviewDuration
+                )?.label
               }
             />
             <KeyValue
               title="Interview Language"
               value={
-                interviewSettings?.interviewLanguage
+                interviewLanguageOptions.find(
+                  (item) => item?.value === interviewSettings?.interviewLanguage
+                )?.label
               }
             />
             <KeyValue

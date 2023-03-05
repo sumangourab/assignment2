@@ -1,5 +1,5 @@
 import { Button, Flex, Box } from "@chakra-ui/react";
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { useEffect } from "react";
 import FormInput from "../../components/formComponents/FormInput";
 import FormSelect from "../../components/formComponents/FormSelect";
 import { useFormik } from "formik";
@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { PageNumbers } from "../../interface/home";
 import { IRequisitionDetails } from "../../interface/forms";
 import { genderOptions, urgencyOptions } from "./constants";
-import { useData, initialValues } from "./DataProvider";
+import { useData } from "./DataProvider";
 
 const RequisitionDetailsForm: React.FC<{
   handleTab: (n: PageNumbers) => void;
@@ -44,8 +44,14 @@ const RequisitionDetailsForm: React.FC<{
     },
   });
 
-  // @ts-ignore
-  const { state, setState } = useData();
+  const { setState } : any = useData();
+
+  useEffect(() => {
+    setState((prevState: any) => ({
+      ...prevState,
+      requisitionDetails: values,
+    }));
+  }, [values, setState]);
 
   return (
     <Box width="100%" as="form" onSubmit={handleSubmit as any}>
@@ -54,16 +60,7 @@ const RequisitionDetailsForm: React.FC<{
           label="Requisition Title"
           placeholder="Enter requisition title"
           name="requisitionTitle"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            handleChange(e);
-            setState({
-              ...state,
-              requisitionDetails: {
-                ...state.requisitionDetails,
-                [e.currentTarget.name]: e.currentTarget.value,
-              },
-            });
-          }}
+          onChange={handleChange}
           onBlur={handleBlur}
           value={values?.requisitionTitle}
           error={errors?.requisitionTitle}
@@ -73,39 +70,21 @@ const RequisitionDetailsForm: React.FC<{
           label="Number of openings"
           placeholder="Enter number of openings"
           name="noOfOpenings"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            handleChange(e);
-            setState({
-              ...state,
-              requisitionDetails: {
-                ...state.requisitionDetails,
-                [e.currentTarget.name]: e.currentTarget.value,
-              },
-            });
-          }}
+          onChange={handleChange}
           onBlur={handleBlur}
+          value={values?.noOfOpenings}
           error={errors?.noOfOpenings}
           touched={touched?.noOfOpenings}
-          value={values?.noOfOpenings}
         />
         <FormSelect
           label="Gender"
           name="gender"
           placeholder="Select gender"
           options={genderOptions}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue("gender", "Male");
-            setState({
-              ...state,
-              requisitionDetails: {
-                ...state.requisitionDetails,
-                gender: "Male",
-              },
-            });
-          }}
+          onChange={setFieldValue}
           onBlur={setFieldTouched}
-          error={errors?.gender}
-          touched={touched?.gender}
+          error={errors.gender}
+          touched={touched.gender}
           value={values.gender}
         />
         <FormSelect
@@ -113,19 +92,10 @@ const RequisitionDetailsForm: React.FC<{
           name="urgency"
           placeholder="Select urgency"
           options={urgencyOptions}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue("urgency", "immediate");
-            setState({
-              ...state,
-              requisitionDetails: {
-                ...state.requisitionDetails,
-                urgency: "Urgent",
-              },
-            });
-          }}
+          onChange={setFieldValue}
           onBlur={setFieldTouched}
-          error={errors?.urgency}
-          touched={touched?.urgency}
+          error={errors.urgency}
+          touched={touched.urgency}
           value={values.urgency}
         />
         <Flex w="100%" justify="flex-end" mt="4rem">
